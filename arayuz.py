@@ -10,7 +10,7 @@ def load_engines():
 analyzer, anonymizer = load_engines()
 
 # Web Sayfası Başlığı
-st.title("🛡️ Siber Kaytarma Önleme")
+st.title("Siber Kaytarma Önleme")
 st.subheader("KVKK Maskeleme Arayüzü")
 
 # Kullanıcıdan giriş al
