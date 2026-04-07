@@ -5,7 +5,17 @@ from presidio_anonymizer import AnonymizerEngine
 # Motorları arka planda bir kez çalıştırıyoruz
 @st.cache_resource
 def load_engines():
-    return AnalyzerEngine(), AnonymizerEngine()
+    try:
+        return AnalyzerEngine(), AnonymizerEngine()
+    except Exception as exc:
+        st.error(
+            "Presidio motorları başlatılamadı. Gerekli paketlerin ve spaCy dil modelinin "
+            "kurulu olduğundan emin olun. Örneğin: "
+            "`pip install presidio-analyzer presidio-anonymizer spacy` ve ardından uygun "
+            "spaCy modelini yükleyin (örn. `python -m spacy download en_core_web_lg`)."
+        )
+        st.exception(exc)
+        st.stop()
 
 analyzer, anonymizer = load_engines()
 
