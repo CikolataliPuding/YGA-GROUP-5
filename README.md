@@ -96,6 +96,8 @@ cd erlikgate
 # Bağımlılıkları yükleyin
 pip install -r requirements.txt
 
+# Gerekli spaCy modelini indirin
+python -m spacy download en_core_web_lg
 # Çevre değişkenlerini ayarlayın
 cp .env.example .env
 
