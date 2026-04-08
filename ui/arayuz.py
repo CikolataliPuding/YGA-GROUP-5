@@ -1,45 +1,40 @@
 import streamlit as st
-from presidio_analyzer import AnalyzerEngine
-from presidio_anonymizer import AnonymizerEngine
+import sys, os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-# Motorları arka planda bir kez çalıştırıyoruz
-@st.cache_resource
+from masking.presidio_engine import anonymize_text, build_engines
+
+@st.cache_resource(show_spinner="Motorlar yükleniyor...")
 def load_engines():
     try:
-        return AnalyzerEngine(), AnonymizerEngine()
+        return build_engines()
     except Exception as exc:
-        st.error(
-            "Presidio motorları başlatılamadı. Gerekli paketlerin ve spaCy dil modelinin "
-            "kurulu olduğundan emin olun. Örneğin: "
-            "`pip install presidio-analyzer presidio-anonymizer spacy` ve ardından uygun "
-            "spaCy modelini yükleyin (örn. `python -m spacy download en_core_web_lg`)."
-        )
+        st.error("Motorlar başlatılamadı. requirements.txt kurulumunu kontrol edin.")
         st.exception(exc)
         st.stop()
 
 analyzer, anonymizer = load_engines()
 
-# Web Sayfası Başlığı
-st.title("Siber Kaytarma Önleme")
+st.title("ErlikGate")
 st.subheader("KVKK Maskeleme Arayüzü")
 
-# Kullanıcıdan giriş al
-user_input = st.text_area("Mesajınızı buraya yazın:", placeholder="Örn: Benim adım Kinem, numaram 0555...")
+user_input = st.text_area(
+    "Mesajınızı buraya yazın:",
+    placeholder="Örn: Adım Kinem, TC kimliğim 10000000146, numaram 0555 123 45 67",
+    max_chars=5000,
+)
 
-if st.button("Verileri Maskele ve Kontrol Et"):
+if st.button("Maskele ve Kontrol Et"):
     if user_input:
-        # 1. Analiz et
-        results = analyzer.analyze(text=user_input, entities=[], language='en')
-        
-        # 2. Maskele
-        anonymized = anonymizer.anonymize(text=user_input, analyzer_results=results)
-        
-        # Sonuçları ekrana bas
+        anonymized, results = anonymize_text(analyzer=analyzer, anonymizer=anonymizer, text=user_input, language="tr")
+
         st.success("İşlem Başarılı!")
-        st.write("**Orijinal Metin:**", user_input)
-        st.warning(f"**Maskelenmiş Metin:** {anonymized.text}")
-        
-        if len(results) > 0:
-            st.info(f"Toplam {len(results)} adet hassas veri gizlendi.")
+        st.write("**Orijinal:**", user_input)
+        st.warning(f"**Maskelenmiş:** {anonymized.text}")
+
+        if results:
+            st.info(f"{len(results)} adet hassas veri tespit edildi:")
+            for r in results:
+                st.code(f"{r.entity_type} → [{r.start}:{r.end}] güven: {r.score:.2f}")
     else:
-        st.error("Lütfen bir metin girin!")
+        st.error("Lütfen metin girin.")
