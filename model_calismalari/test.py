@@ -13,4 +13,6 @@ bitis = time.time()
 
 print(f"\n--- SONUÇ ---")
 print(f"Cümle: {cumle}")
+print(f"Tahmin Etiketi: {sonuc[0]['label']}")
+print(f"Güven Skoru: {sonuc[0]['score']:.4f}")
 print(f"Gecikme Süresi: {(bitis - baslangic)*1000:.2f} ms")
