@@ -17,7 +17,6 @@ sources = [
 ]
 
 records = []
-source_counts = {}
 for path in sources:
     p = Path(path)
     if not p.exists():
@@ -30,7 +29,6 @@ for path in sources:
             if line:
                 records.append(json.loads(line))
                 source_count += 1
-    source_counts[path] = source_count
     if source_count == 0:
         raise ValueError(
             f"HATA: {path} mevcut ama 0 kayit uretti. "
