@@ -22,7 +22,7 @@ SOURCES = [
     {
         "name": "rubend18/ChatGPT-Jailbreak-Prompts",
         "split": "train",
-        "text_col": "text",
+        "text_col": "Prompt",
         "label_col": None,
         "label_map": None
     },
