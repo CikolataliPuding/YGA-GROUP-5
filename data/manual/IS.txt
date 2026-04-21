@@ -1,0 +1,204 @@
+Niyet: İş (Work) Veri Seti
+1. Yazılım, Sistem Mimarisi ve DevOps
+Python'da liste üreteçleri (list comprehensions) için bellek optimizasyonu nasıl yapılır?
+
+FastAPI'de CORS (Cross-Origin Resource Sharing) ayarlarını yapılandırmak için örnek kod yazar mısın?
+
+Docker container'ların kendi aralarında haberleşmesi için docker-compose network tanımı nasıl olmalı?
+
+React uygulamasında useEffect hook'unun sonsuz döngüye girmesini nasıl engellerim?
+
+PostgreSQL'de büyük bir tabloda indexleme yaparken performansı artırmak için hangi yöntemler kullanılır?
+
+Git'te yanlışlıkla commit ettiğim bir dosyayı, history'den tamamen nasıl silebilirim?
+
+Nginx'te HTTP trafiğini HTTPS'e yönlendiren (redirect) konfigürasyon bloğunu yazar mısın?
+
+CI/CD pipeline'ında bir unit test fail olduğunda pipeline'ın durması için GitLab CI YAML dosyası nasıl güncellenir?
+
+Python'da asenkron (asyncio) fonksiyonlar kullanarak eşzamanlı HTTP istekleri nasıl atılır?
+
+Kubernetes (K8s) deployment dosyasında pod'ların CPU ve memory limitlerini nasıl belirlerim?
+
+Frontend'de form validasyonu yaparken Yup ve Formik kütüphanelerinin entegrasyonunu açıkla.
+
+Django ORM kullanarak iki farklı modeli Foreign Key ile birbirine bağlayan örnek bir yapı kur.
+
+Redis önbelleği (cache) kullanarak veritabanı sorgularını hızlandıran bir Python fonksiyonu yazar mısın?
+
+Vue.js uygulamasında state yönetimi için Pinia kullanmanın Vuex'e göre avantajları nelerdir?
+
+AWS S3 bucket'ına dosya yüklemek için Boto3 kütüphanesini kullanan bir script örneği ver.
+
+Mikroservis mimarisinde servisler arası iletişim için gRPC ve REST API karşılaştırması yapar mısın?
+
+Linux sunucuda disk alanını en çok tüketen 10 dosyayı bulmak için hangi terminal komutunu kullanmalıyım?
+
+Node.js backend uygulamasında JWT (JSON Web Token) ile kullanıcı doğrulama (authentication) nasıl yapılır?
+
+Unit test yazarken Pytest kütüphanesinde mock ve patch dekoratörleri arasındaki fark nedir?
+
+MongoDB'de aggregation framework kullanarak belirli bir tarih aralığındaki satışların toplamını nasıl bulurum?
+
+Terraform kullanarak AWS üzerinde basit bir EC2 instance oluşturmak için gerekli olan .tf dosyasını yazar mısın?
+
+Yazılım tasarım desenlerinden (design patterns) Factory ve Singleton desenlerinin kullanım senaryolarını açıkla.
+
+C# .NET Core uygulamasında bağımlılık enjeksiyonu (Dependency Injection) container'ı nasıl yapılandırılır?
+
+Uygulamada bellek sızıntısı (memory leak) olup olmadığını tespit etmek için Chrome DevTools nasıl kullanılır?
+
+GraphQL API'sinde N+1 sorgu problemini çözmek için Dataloader kütüphanesi nasıl implemente edilir?
+
+2. Veri Analizi, İş Zekası (BI) ve Makine Öğrenimi
+Pandas DataFrame'inde eksik (NaN) değerleri sütunun ortalamasıyla doldurmak için hangi metodu kullanmalıyım?
+
+Müşteri churn oranını (kayıp oranı) hesaplamak için kullanılabilecek matematiksel formülü açıkla.
+
+Excel'de düşeyara (VLOOKUP) fonksiyonu yerine çaprazara (XLOOKUP) kullanmanın avantajları nelerdir?
+
+A/B testi sonuçlarının istatistiksel olarak anlamlı (significant) olup olmadığını hesaplamak için p-değeri nasıl yorumlanır?
+
+Python'da scikit-learn kütüphanesi ile Lojistik Regresyon modeli eğitmek için temel adımları yazar mısın?
+
+SQL'de GROUP BY ve HAVING ifadelerini kullanarak, toplam satışı 10.000'den fazla olan kategorileri listeleyen sorguyu yaz.
+
+Satış tahminlemesi (forecasting) yapmak için ARIMA ve Prophet zaman serisi modellerinin farklarını açıkla.
+
+Veri görselleştirme yaparken bar grafiği ile histogram arasındaki temel fark nedir ve hangi durumlarda kullanılırlar?
+
+Tableau'da iki farklı veri kaynağını (data source) birleştirmek (blend) için hangi adımları izlemeliyim?
+
+Python matplotlib kütüphanesini kullanarak ikili bir scatter plot (dağılım grafiği) çizen kod bloğunu oluştur.
+
+Müşteri segmentasyonu için K-Means kümeleme algoritmasında optimum "k" değerini bulmak için Elbow metodunu açıkla.
+
+JSON formatındaki iç içe (nested) veriyi düzleştirerek (flatten) CSV formatına dönüştüren bir Python scripti yazar mısın?
+
+Karar ağacı (Decision Tree) modellerinde aşırı öğrenmeyi (overfitting) engellemek için budama (pruning) nasıl yapılır?
+
+SQL'de pencere fonksiyonlarını (Window Functions) kullanarak her departmandaki en yüksek maaşlı çalışanı bulan sorguyu yaz.
+
+Power BI'da DAX (Data Analysis Expressions) diliyle, bir önceki yılın aynı dönemine göre satış büyümesini hesaplayan formülü yaz.
+
+Veri seti dengesiz (imbalanced) olduğunda sınıflandırma modellerinin performansını ölçmek için neden Accuracy yerine F1-Score kullanılır?
+
+Korelasyon matrisi nedir ve değişkenler arasındaki ilişkinin yönünü ve gücünü nasıl gösterir?
+
+NLP (Doğal Dil İşleme) projelerinde metin verilerini temizlerken stop-words'leri kaldırmanın model üzerindeki etkisi nedir?
+
+Müşteri yaşam boyu değeri (CLV - Customer Lifetime Value) hesaplamasında kullanılan temel metrikler nelerdir?
+
+Python seaborn kütüphanesi ile değişkenler arasındaki dağılımı gösteren bir pairplot nasıl çizilir?
+
+Rastgele Orman (Random Forest) algoritmasının çalışma prensibini ve neden tek bir karar ağacından daha iyi sonuç verdiğini açıkla.
+
+Google Analytics 4 (GA4) etkinlik (event) verilerini BigQuery'ye aktardıktan sonra ilk analiz sorgusu nasıl olmalı?
+
+PCA (Temel Bileşenler Analizi) kullanarak çok boyutlu veri setinin boyutunu küçültürken varyans kaybı nasıl en aza indirilir?
+
+RFM analizi (Recency, Frequency, Monetary) müşteri davranışını sınıflandırmada nasıl bir yöntem izler?
+
+Veri kalitesini ölçmek için veri temizleme (data cleansing) sürecinde kontrol edilmesi gereken 5 temel kuralı listele.
+
+3. Kurumsal İletişim, Pazarlama ve Metin Yazarlığı
+Önümüzdeki haftaki sprint planlama toplantısının ajandasını belirten resmi bir davet e-postası taslağı hazırla.
+
+Müşterimizin ilettiği yazılım hatasının (bug) çözüldüğünü ve yeni sürüme dahil edildiğini bildiren bir bilgilendirme maili yaz.
+
+Şirket içi eğitim portalının yenilendiğini tüm çalışanlara duyuracak kısa ve teşvik edici bir Slack mesajı oluştur.
+
+Potansiyel B2B müşterilerine yönelik, sunduğumuz bulut depolama hizmetinin güvenlik avantajlarını anlatan bir tanıtım bülteni yaz.
+
+Yönetim kuruluna sunulacak olan çeyrek dönem finansal raporu için yönetici özeti (executive summary) taslağı çıkar.
+
+Ekibimize yeni katılan yazılım geliştiriciler için İlk Gün Hoşgeldin e-postasını, şirketin vizyonunu da içerecek şekilde yaz.
+
+Bir tedarikçiye, teslimattaki gecikmeden dolayı yaşadığımız mağduriyeti profesyonel ancak kararlı bir dille ifade eden bir e-posta hazırla.
+
+Pazarlama departmanı için hazırlanan "Dijital Dönüşüm Stratejileri" konulu webinar davetiyesi metnini yazar mısın?
+
+Yıllık performans değerlendirme görüşmesi öncesi çalışanın kendi başarılarını özetlemesine yardımcı olacak 3 rehber soru oluştur.
+
+Şirketimizin ISO 27001 Bilgi Güvenliği sertifikası aldığını duyuran bir LinkedIn basın bülteni metni hazırla.
+
+Ürünümüzün premium özelliklerini iptal etmek isteyen bir müşteriyi ikna etmek için kullanılacak bir geri kazanım (win-back) e-postası yaz.
+
+Kurumsal bir etkinlikte şirketi temsil edecek konuşmacı için kısa, etkileyici bir giriş (asansör konuşması) metni hazırla.
+
+Müşteri destek ekibinin, sıkça sorulan teknik bir soruya standart ve çözüm odaklı cevap verebileceği bir makale şablonu oluştur.
+
+Şirketimizin uzaktan çalışma politikasında yapılan güncellemeleri maddeler halinde açıklayan bir iç iletişim duyurusu yaz.
+
+İş başvurusunda bulunan ancak pozisyon için uygun görülmeyen bir adaya gönderilecek nazik bir ret mektubu (rejection letter) hazırla.
+
+Önümüzdeki ay düzenlenecek şirket içi hackathon etkinliğini duyuran ve katılımı teşvik eden enerjik bir e-posta taslağı oluştur.
+
+Yeni çıkan SaaS ürünümüzün ana sayfası (landing page) için ziyaretçiyi harekete geçirecek (Call to Action) 3 farklı başlık önerisi sun.
+
+Stratejik bir partnerlik teklifi için, karşı tarafın karar vericisine (CEO/CTO) gönderilecek soğuk e-posta (cold email) taslağı yaz.
+
+Bakım çalışması nedeniyle sistemlerin 2 saat çevrimdışı olacağını müşterilere önceden bildiren bir servis duyuru metni hazırla.
+
+Aylık şirket bülteninin giriş bölümüne, ekibin geçen ay gösterdiği üstün çabayı takdir eden kısa bir önsöz yaz.
+
+Şirket içi bir mentorluk programının başlatıldığını duyuran ve başvuruları toplamayı amaçlayan bir bilgilendirme metni oluştur.
+
+Kullanıcıların uygulamada yaşadığı oturum açma sorunu hakkında, geçici çözüm adımlarını içeren bir sosyal medya duyurusu yaz.
+
+Kurumsal sosyal sorumluluk projemiz olan ağaç dikme etkinliğine katılımı artırmak için kullanılacak afiş metnini tasarla.
+
+Müşteri memnuniyeti anketine katılımı artırmak için anketi dolduranlara indirim kodu verileceğini belirten bir e-posta yaz.
+
+Satış ekibinin yeni bir ürünü tanıtırken kullanacağı itiraz karşılama (objection handling) argümanlarını özetleyen bir bilgi notu hazırla.
+
+4. Proje Yönetimi ve Strateji Planlama
+Çevik (Agile) metodolojide "Scrum Master" ve "Product Owner" rollerinin temel sorumlulukları ve farkları nelerdir?
+
+Proje yönetiminde Kritik Yol Metodu (Critical Path Method - CPM) nedir ve projenin süresini nasıl etkiler?
+
+Bir yazılım projesinin başlatma (initiation) aşamasında hazırlanması gereken Proje Başlatma Belgesi'nin (Project Charter) temel bileşenleri nelerdir?
+
+Kanban panosunda (board) "Work in Progress" (WIP) limitlerini belirlemenin ekibin verimliliğine etkisi nasıldır?
+
+Risk yönetim matrisi (Risk Matrix) kullanılarak proje riskleri olasılık ve etki derecesine göre nasıl önceliklendirilir?
+
+Paydaş (Stakeholder) analizi yaparken kullanılan Etki/İlgi (Power/Interest) matrisinin 4 ana çeyreğini açıkla.
+
+Sprint Retrospektif toplantılarında takımın gelişimini desteklemek için hangi teknikler (örneğin Start-Stop-Continue) kullanılabilir?
+
+Bir projede Kapsam Kayması (Scope Creep) neden olur ve proje yöneticisi bunu engellemek için hangi adımları atmalıdır?
+
+Şelale (Waterfall) modeli ile Çevik (Agile) modeli karşılaştıran ve hangi durumlarda hangisinin seçilmesi gerektiğini belirten bir özet hazırla.
+
+Proje bütçesini kontrol etmek için kullanılan Kazanılmış Değer Analizi'nde (Earned Value Analysis) SPI ve CPI metrikleri nasıl yorumlanır?
+
+İletişim planı hazırlanırken hangi paydaşa, hangi bilginin, ne sıklıkla ve hangi kanaldan iletileceği nasıl belirlenir?
+
+Geliştirme ekibinin kapasitesini (velocity) hesaplamak ve bir sonraki sprint'te alınacak işleri tahmin etmek için hangi veriler kullanılır?
+
+Minimum Uygulanabilir Ürün (MVP) yaklaşımının ürün geliştirme sürecindeki temel amacı ve avantajları nelerdir?
+
+Bir görev için harcanacak süreyi tahmin ederken (estimation) kullanılan "Planning Poker" tekniğinin adımlarını anlat.
+
+Proje kapanış raporunda (Project Closure Report) yer alması gereken "Alınan Dersler" (Lessons Learned) bölümünün önemi nedir?
+
+Ekip içi çatışmaları çözmek (conflict resolution) için proje yöneticisinin kullanabileceği 5 temel stratejiyi açıkla.
+
+RACI matrisinin ne olduğunu ve proje görevlerinin dağılımında karmaşayı önlemek için nasıl kullanıldığını tanımla.
+
+SMART hedef belirleme kriterleri nelerdir ve bir projenin başarısı için neden bu kriterlere uyulması gerekir?
+
+Ürün yol haritası (Product Roadmap) ile ürün birikim listesi (Product Backlog) arasındaki fark nedir ve birbirlerini nasıl beslerler?
+
+Dış kaynak (Outsourcing) kullanımının proje yönetimi açısından riskleri ve avantajları nelerdir?
+
+Proje kalite yönetimi sürecinde, kalite güvence (Quality Assurance) ile kalite kontrol (Quality Control) arasındaki ayrımı açıkla.
+
+Sprint planlama sırasında bir User Story'nin "Bitti" (Definition of Done) olarak kabul edilmesi için hangi şartları sağlaması gerekir?
+
+Geçmişte yaşanan bir kriz durumunu analiz edip, gelecekte benzer bir durumu önlemek için nasıl bir Kök Neden Analizi (Root Cause Analysis) yapılır?
+
+Proje takviminde gecikme yaşandığında projeyi hızlandırmak için kullanılan "Crashing" ve "Fast Tracking" tekniklerini karşılaştır.
+
+Uzaktan çalışan dağıtık ekiplerde (distributed teams) günlük Scrum toplantılarının verimliliğini artırmak için hangi yöntemler uygulanabilir?
