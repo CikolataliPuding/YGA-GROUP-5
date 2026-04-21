@@ -68,17 +68,31 @@ for label, samples in by_label.items():
     balanced.extend(selected)
     print(f"  Label {label}: {len(selected)} ornek secildi")
 
-random.shuffle(balanced)
+def stratified_split(data, test_ratio=0.15, val_ratio=0.15):
+    grouped = {}
+    for record in data:
+        label = record["label"]
+        grouped.setdefault(label, []).append(record)
 
-# --- Split: %70 train / %15 val / %15 test ---
-n      = len(balanced)
-n_test = int(n * 0.15)
-n_val  = int(n * 0.15)
+    train, val, test = [], [], []
 
-test  = balanced[:n_test]
-val   = balanced[n_test:n_test + n_val]
-train = balanced[n_test + n_val:]
+    for samples in grouped.values():
+        random.shuffle(samples)
+        n = len(samples)
+        n_test = int(n * test_ratio)
+        n_val = int(n * val_ratio)
 
+        test.extend(samples[:n_test])
+        val.extend(samples[n_test:n_test + n_val])
+        train.extend(samples[n_test + n_val:])
+
+    random.shuffle(train)
+    random.shuffle(val)
+    random.shuffle(test)
+    return train, val, test
+
+# --- Split: %70 train / %15 val / %15 test (stratified) ---
+train, val, test = stratified_split(balanced, test_ratio=0.15, val_ratio=0.15)
 # --- Kaydet ---
 Path("data/processed").mkdir(parents=True, exist_ok=True)
 
