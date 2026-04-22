@@ -98,7 +98,6 @@ def main():
     for lbl, cnt in sorted(dist.items()):
         print(f"  {ID2LABEL[lbl]:<10} : {cnt} ornek")
 
-    from datasets import Dataset
     train_ds = Dataset.from_dict({"text": [r["text"] for r in train_records], "label": [r["label"] for r in train_records]})
     val_ds   = Dataset.from_dict({"text": [r["text"] for r in val_records],   "label": [r["label"] for r in val_records]})
     test_ds  = Dataset.from_dict({"text": [r["text"] for r in test_records],  "label": [r["label"] for r in test_records]})
