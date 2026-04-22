@@ -36,27 +36,33 @@ OUTPUT_CSV = "ablation_results.csv"
 ONNX_BASE  = Path("onnx/ablation")
 # ────────────────────────────────────────────────────────
 
-def export_onnx(model_key: str, hf_path: str, max_len: int) -> Path:
-    """HF checkpoint → ONNX FP32 → INT8. Export path döndürür."""
+def export_onnx(model_key: str, hf_path: str, max_len: int, quantize: bool = True) -> Path:
+    """HF checkpoint'i ONNX'e export eder; quantize=True ise INT8 model döndürür."""
     tag      = f"{model_key}_tok{max_len}"
     out_dir  = ONNX_BASE / tag
     int8_dir = out_dir / "int8"
 
-    if int8_dir.exists():
+    if quantize and int8_dir.exists():
         print(f"  [SKIP] {tag} zaten export edilmiş.")
         return int8_dir
+    if not quantize and out_dir.exists():
+        print(f"  [SKIP] {tag} zaten export edilmiş.")
+        return out_dir
 
-    print(f"  [EXPORT] {tag} → ONNX...")
-    model = ORTModelForSequenceClassification.from_pretrained(
-        hf_path, export=True
-    )
-    tokenizer = AutoTokenizer.from_pretrained(hf_path)
-    model.save_pretrained(str(out_dir))
-    tokenizer.save_pretrained(str(out_dir))
+    if not out_dir.exists():
+        print(f"  [EXPORT] {tag} → ONNX...")
+        model = ORTModelForSequenceClassification.from_pretrained(
+            hf_path, export=True
+        )
+        tokenizer = AutoTokenizer.from_pretrained(hf_path)
+        model.save_pretrained(str(out_dir))
+        tokenizer.save_pretrained(str(out_dir))
 
     # T5 encoder-decoder → quantization farklı davranır, sadece export yeterli
     if "t5" in model_key:
         print(f"  [WARN] T5 encoder-decoder — INT8 skip, FP32 ile ölçülecek.")
+        return out_dir
+    if not quantize:
         return out_dir
 
     print(f"  [QUANT] INT8 dynamic quantization...")
@@ -106,11 +112,11 @@ def main():
             print(f"\n{'='*50}")
             print(f"Model: {model_key} | Token: {max_len}")
 
-            # FP32 modeller için ayrı yol (xlmr-fp32)
-            quant_type = "INT8" if "int8" in model_key or model_key not in ["xlmr-fp32", "t5-small"] else "FP32"
+            use_quantization = model_key not in {"xlmr-fp32", "t5-small"}
+            quant_type = "INT8" if use_quantization else "FP32"
 
             try:
-                export_dir = export_onnx(model_key, hf_path, max_len)
+                export_dir = export_onnx(model_key, hf_path, max_len, quantize=use_quantization)
                 metrics    = benchmark(export_dir, max_len)
 
                 row = {
