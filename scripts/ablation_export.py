@@ -5,7 +5,7 @@
 # 3) Latency benchmark (150 örnek, p50/p95/p99)
 # 4) Sonuçları ablation_results.csv'ye yazar
 
-import time, csv, os, shutil
+import time, csv
 import numpy as np
 from pathlib import Path
 from optimum.onnxruntime import ORTModelForSequenceClassification, ORTQuantizer
