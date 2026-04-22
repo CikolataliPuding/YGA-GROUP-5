@@ -13,7 +13,6 @@ from transformers import (
     EarlyStoppingCallback,
 )
 from sklearn.metrics import f1_score, classification_report
-from sklearn.model_selection import train_test_split
 
 # ── CONFIG ──────────────────────────────────────────────────────────────────
 MODEL_NAME  = "xlm-roberta-base"
@@ -46,26 +45,6 @@ def load_jsonl(path: str) -> list[dict]:
                 "label": int(obj["label"]),  # direkt al, map etme
             })
     return records
-
-
-def make_splits(records: list[dict]):
-    """80 / 10 / 10 stratified split."""
-    texts  = [r["text"]  for r in records]
-    labels = [r["label"] for r in records]
-
-    # Önce train / temp
-    t_texts, tmp_texts, t_labels, tmp_labels = train_test_split(
-        texts, labels, test_size=0.2, stratify=labels, random_state=SEED
-    )
-    # Sonra val / test
-    v_texts, te_texts, v_labels, te_labels = train_test_split(
-        tmp_texts, tmp_labels, test_size=0.5, stratify=tmp_labels, random_state=SEED
-    )
-
-    def to_hf(txts, lbls):
-        return Dataset.from_dict({"text": txts, "label": lbls})
-
-    return to_hf(t_texts, t_labels), to_hf(v_texts, v_labels), to_hf(te_texts, te_labels)
 
 
 def tokenize_fn(batch, tokenizer):
