@@ -42,3 +42,10 @@ logs/
 .coverage
 htmlcov/
 .pytest_cache/
+
+
+checkpoints/
+onnx/
+dataset/raw/
+__pycache__/
+*.pyc
