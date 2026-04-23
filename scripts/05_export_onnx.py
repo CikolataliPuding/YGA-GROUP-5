@@ -27,6 +27,8 @@ def export_fp32(checkpoint: str, onnx_fp32: str, max_length: int):
         checkpoint, export=True
     )
     tokenizer = AutoTokenizer.from_pretrained(checkpoint)
+    tokenizer.model_max_length = max_length
+    tokenizer.init_kwargs["model_max_length"] = max_length
     Path(onnx_fp32).mkdir(parents=True, exist_ok=True)
     model.save_pretrained(onnx_fp32)
     tokenizer.save_pretrained(onnx_fp32)
