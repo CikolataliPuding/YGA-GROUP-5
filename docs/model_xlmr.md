@@ -46,10 +46,7 @@
 | Learning Rate | 2e-5 |
 | Batch Size | 16 |
 | Max Length | 64 token |
-| Warmup Ratio | 0.1 |
-| Weight Decay | 0.01 |
 | Optimizer | AdamW |
-| Early Stopping | Patience: 3 |
 | Mixed Precision | fp16 (CUDA aktifken) |
 
 **Dataset Kaynakları:**
