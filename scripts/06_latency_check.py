@@ -50,10 +50,13 @@ def evaluate(model_dir: str, texts: list, labels: list, model_tag: str, file_nam
         file_name=file_name,
         session_options=sess_options,
     )
-    tokenizer = AutoTokenizer.from_pretrained(
-        model_dir,
-        fix_mistral_regex=True,
-    )
+    try:
+        tokenizer = AutoTokenizer.from_pretrained(
+            model_dir,
+            fix_mistral_regex=True,
+        )
+    except TypeError:
+        tokenizer = AutoTokenizer.from_pretrained(model_dir)
 
     preds     = []
     latencies = []
@@ -129,6 +132,8 @@ def main():
         ("xlmr",     "onnx/xlmr-int8-tok{tok}",     "model_quantized.onnx"),
         ("deberta",  "onnx/deberta-int8-tok{tok}",   "model_quantized.onnx"),
         ("minilm",   "onnx/minilm-int8-tok{tok}",    "model_quantized.onnx"),
+        ("modernbert", "onnx/modernbert-int8-tok{tok}", "model_quantized.onnx"),
+        ("mbert",      "onnx/mbert-int8-tok{tok}",      "model_quantized.onnx"),
         ("tinybert", "onnx/tinybert-int8-tok{tok}",  "model_quantized.onnx"),
         ("t5",       "onnx/t5-int8-tok{tok}",        "model_quantized.onnx"),
     ]
