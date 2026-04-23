@@ -85,21 +85,36 @@ def evaluate(model_dir: str, texts: list, labels: list, model_tag: str, file_nam
     ))
 
     arr = np.array(latencies)
-    print(f"Latency ({len(arr)} örnek, ilk {WARMUP} warmup hariç):")
-    print(f"  avg_ms : {arr.mean():.3f}")
-    print(f"  p50_ms : {np.percentile(arr, 50):.3f}")
-    print(f"  p95_ms : {np.percentile(arr, 95):.3f}")
-    print(f"  p99_ms : {np.percentile(arr, 99):.3f}")
-    print(f"  max_ms : {arr.max():.3f}")
-    nfr = np.percentile(arr, 95) <= NFR_LIMIT
-    print(f"  NFR-01 (p95 ≤ {NFR_LIMIT}ms): {'PASS ✓' if nfr else 'FAIL ✗'}")
+    p50_ms = None
+    p95_ms = None
+
+    if arr.size == 0:
+        print(
+            f"Latency stats hesaplanamadı: ilk {WARMUP} warmup sonrası örnek kalmadı "
+            f"(toplam metin sayısı: {len(texts)})."
+        )
+    else:
+        p50_ms = float(np.percentile(arr, 50))
+        p95_ms = float(np.percentile(arr, 95))
+        p99_ms = float(np.percentile(arr, 99))
+        max_ms = float(arr.max())
+        avg_ms = float(arr.mean())
+        nfr = p95_ms <= NFR_LIMIT
+
+        print(f"Latency ({len(arr)} örnek, ilk {WARMUP} warmup hariç):")
+        print(f"  avg_ms : {avg_ms:.3f}")
+        print(f"  p50_ms : {p50_ms:.3f}")
+        print(f"  p95_ms : {p95_ms:.3f}")
+        print(f"  p99_ms : {p99_ms:.3f}")
+        print(f"  max_ms : {max_ms:.3f}")
+        print(f"  NFR-01 (p95 ≤ {NFR_LIMIT}ms): {'PASS ✓' if nfr else 'FAIL ✗'}")
 
     return {
         'max_len':  max_length,
         'accuracy': accuracy_score(labels[:45], preds[:45]),
         'f1_macro': f1_score(labels[:45], preds[:45], average='macro'),
-        'p50_ms':   float(np.percentile(arr, 50)),
-        'p95_ms':   float(np.percentile(arr, 95)),
+        'p50_ms':   p50_ms,
+        'p95_ms':   p95_ms,
     }
 
 
