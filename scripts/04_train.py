@@ -126,7 +126,6 @@ def main():
         eval_strategy="epoch",
         save_strategy="no",
         load_best_model_at_end=False,
-        metric_for_best_model="f1_macro",
         fp16=torch.cuda.is_available(),
         seed=SEED,
         logging_steps=10,
