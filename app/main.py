@@ -1,7 +1,3 @@
-import sys
-import os
-sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-
 from fastapi import FastAPI
 from pydantic import BaseModel
 from app.classifier import ErlikClassifier
