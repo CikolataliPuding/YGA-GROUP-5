@@ -2,7 +2,7 @@
 
 import re
 
-# ── TEHDIT kurallları — kesin eşleşme ──────────────────────────────────────
+# ── TEHDIT kuralları — kesin eşleşme ───────────────────────────────────────
 TEHDIT_KEYWORDS = [
     # Prompt injection
     "ignore previous instructions", "forget everything", "you are now dan",
