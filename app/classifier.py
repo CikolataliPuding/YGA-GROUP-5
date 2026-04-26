@@ -1,16 +1,10 @@
 # app/classifier.py
 
 import time
-import sys
-import os
 import numpy as np
 import onnxruntime as ort
 from transformers import AutoTokenizer
-
-# Rule engine'i import et
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'gateway'))
-from rule_engine import kural_motoru
-
+from gateway import kural_motoru
 # ── CONFIG ───────────────────────────────────────────────────────────────────
 ONNX_PATH  = "onnx/minilm-int8-tok32/model_quantized.onnx"
 MODEL_DIR  = "onnx/minilm-int8-tok32"
