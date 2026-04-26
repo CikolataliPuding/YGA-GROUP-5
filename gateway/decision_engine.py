@@ -1,10 +1,7 @@
 # gateway/decision_engine.py
 
 import torch
-import sys
-import os
-sys.path.insert(0, os.path.dirname(__file__))
-from rule_engine import kural_motoru
+from .rule_engine import kural_motoru
 
 # ── CONFIG ──────────────────────────────────────────────────────────────────
 MODEL_PATH           = "checkpoints/xlmr-erlikgate"
