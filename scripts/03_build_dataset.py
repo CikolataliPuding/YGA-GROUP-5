@@ -7,13 +7,15 @@ random.seed(42)
 
 # --- Tum dosyalari yukle ---
 sources = [
-    # HF verileri
-    "data/raw/deepset_prompt-injections.jsonl",
-    "data/raw/JasperLS_prompt-injections.jsonl",
-    "data/raw/rubend18_ChatGPT-Jailbreak-Prompts.jsonl",
     # Manuel veriler
+    "data/raw/erlikgate_v3.jsonl",
+    "data/raw/erlikgate_v2.jsonl",
+    "data/raw/erlikgate_v4.jsonl",
     "data/manual/guvenli.jsonl",
+    "data/raw/erlikgate_synthetic_v1.jsonl",
+    "data/raw/erlikgate_synthetic_v2.jsonl",
     "data/manual/kaytarma.jsonl",
+    "data/raw/akademik_ek.jsonl",
 ]
 
 records = []
@@ -57,8 +59,9 @@ for r in deduped:
     if r["label"] in by_label:
         by_label[r["label"]].append(r)
 
-# --- Her siniftan 100 ornek al ---
-TARGET = 100
+# --- Her siniftan min(label_count) kadar ornek al ---
+TARGET = min(len(samples) for samples in by_label.values())
+print(f"Her siniftan {TARGET} ornek alinacak")
 balanced = []
 for label, samples in by_label.items():
     random.shuffle(samples)
