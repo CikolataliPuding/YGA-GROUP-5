@@ -1,7 +1,5 @@
 # gateway/rule_engine.py
 
-import re
-
 # ── TEHDIT kuralları — kesin eşleşme ───────────────────────────────────────
 TEHDIT_KEYWORDS = [
     # Prompt injection
