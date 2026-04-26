@@ -59,7 +59,7 @@ for r in deduped:
     if r["label"] in by_label:
         by_label[r["label"]].append(r)
 
-# --- Her siniftan 100 ornek al ---
+# --- Her siniftan min(label_count) kadar ornek al ---
 TARGET = min(len(samples) for samples in by_label.values())
 print(f"Her siniftan {TARGET} ornek alinacak")
 balanced = []
