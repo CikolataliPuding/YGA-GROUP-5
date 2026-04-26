@@ -7,7 +7,7 @@ random.seed(42)
 
 # --- Tum dosyalari yukle ---
 sources = [
-    #     # Manuel veriler
+    # Manuel veriler
     "data/raw/erlikgate_v3.jsonl",
     "data/raw/erlikgate_v2.jsonl",
     "data/raw/erlikgate_v4.jsonl",
