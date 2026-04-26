@@ -107,13 +107,17 @@ class ErlikClassifier:
             model_label, confidence, rule_label, matched_rule
         )
 
+        # `confidence` alanı nihai karara ait olmalı; model güveni ayrı döndürülür.
+        decision_confidence = confidence if decision == model_label else 1.0
+
         return {
-            "decision":     decision,
-            "label":        model_label,
-            "confidence":   round(confidence, 4),
-            "inference_ms": round(inference_ms, 3),
-            "source":       source,
-            "rule_match":   matched_rule,
+            "decision":         decision,
+            "label":            model_label,
+            "confidence":       round(decision_confidence, 4),
+            "model_confidence": round(confidence, 4),
+            "inference_ms":     round(inference_ms, 3),
+            "source":           source,
+            "rule_match":       matched_rule,
         }
 
     @staticmethod
