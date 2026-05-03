@@ -42,9 +42,10 @@ TEHDIT_CONTEXT = [
     "escalat", "obfuscat", "deobfuscat", "reverse engineer",
     "zero day", "vulnerability", "exploit", "attack",
     # Türkçe
-    "hackle", "sız", "ele geçir", "kır", "atla",
-    "bypass et", "yetkisiz", "izinsiz", "gizlice",
-    "tespitsiz", "açık", "zafiyet", "saldır",
+    "hackle", "sızdır", "veri sız", "ele geçir", "hesap ele geçir",
+    "şifre kır", "parola kır", "atlat", "bypass et",
+    "yetkisiz", "izinsiz", "gizlice", "tespit edilmeden",
+    "güvenlik açığı", "zafiyet", "saldır",
 ]
 
 # ── Seviye 3: Öğrenme/kurulum kelimeleri ────────────────────────────────────
