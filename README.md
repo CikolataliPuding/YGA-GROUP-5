@@ -166,3 +166,34 @@ GET /health
 ---
 
 ## 6. Proje Yapısı
+# Uygulamayı başlatın
+uvicorn main:app --reload --port 8000
+
+
+---
+##  ErlikGate Pro | Arayüz ve Maskeleme Modülü
+
+Bu bölüm, projenin KVKK uyumlu veri maskeleme ve dashboard süreçlerini kapsar.
+
+###  Kurulum ve Çalıştırma 
+Arayüzü ve animasyonları sorunsuz görüntülemek için:
+
+1. **Bağımlılıkları Yükle:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. **NLP Modelini İndir:**
+   ```bash
+   python -m spacy download en_core_web_sm
+   ```
+
+3. **Sistemi Başlat:**
+   ```bash
+   python -m streamlit run ui/arayuz.py
+   ```
+
+**Modül Yapısı**
+- `ui/`: Kullanıcı arayüzü katmanı (`arayuz.py`).
+- `masking/`: Veri analiz motoru ve kural tanımlayıcıları (`presidio_engine.py`, `tr_recognizers.py`).
+- `requirements.txt`: Sistem için gerekli tüm kütüphane listesi.
