@@ -79,18 +79,21 @@ class ErlikClassifier:
 
     def classify(self, text: str) -> dict:
         text = text.strip()
-        text = (text.replace("I", "ı")
-                    .replace("İ", "i")
-                    .replace("Ş", "ş")
-                    .replace("Ğ", "ğ")
-                    .replace("Ü", "ü")
-                    .replace("Ö", "ö")
-                    .replace("Ç", "ç"))
-        text = text.lower()
-        # Katman 1 — Model
-        model_label, confidence, inference_ms = self._model_predict(text)
 
-        # Katman 2 — Kural Motoru
+        # Model için: TR-özel normalizasyon (I→ı dönüşümü sadece model girdisine uygulanır)
+        text_normalized = (text.replace("I", "ı")
+                               .replace("İ", "i")
+                               .replace("Ş", "ş")
+                               .replace("Ğ", "ğ")
+                               .replace("Ü", "ü")
+                               .replace("Ö", "ö")
+                               .replace("Ç", "ç"))
+        text_normalized = text_normalized.lower()
+
+        # Katman 1 — Model (TR-normalize edilmiş metin)
+        model_label, confidence, inference_ms = self._model_predict(text_normalized)
+
+        # Katman 2 — Kural Motoru (orijinal metin; içeride iki normalizasyon uygulanır)
         rule_label, _, matched_rule = kural_motoru(text)
 
         # Katman 3 — Karar Matrisi

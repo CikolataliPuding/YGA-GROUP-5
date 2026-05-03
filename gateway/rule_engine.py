@@ -112,50 +112,57 @@ KAYTARMA_KEYWORDS = [
 
 
 # ── Yardımcı fonksiyon ───────────────────────────────────────────────────────
-def _tehdit_baglan_var_mi(text_lower: str) -> bool:
-    """
-    Metinde tehdit bağlamı var mı kontrol eder.
-    Öğrenme sorusuyla birlikte tehdit kelimesi varsa True döner.
-
-    Örnekler:
-      "how to install docker"      → False
-      "how to install a keylogger" → True
-      "how to bypass firewall"     → True
-    """
-    return any(k in text_lower for k in TEHDIT_CONTEXT)
+def _tr_normalize(text: str) -> str:
+    """Türkçe büyük harfleri küçük harfe çevirir (I→ı dahil)."""
+    return (text.replace("I", "ı")
+                .replace("İ", "i")
+                .replace("Ş", "ş")
+                .replace("Ğ", "ğ")
+                .replace("Ü", "ü")
+                .replace("Ö", "ö")
+                .replace("Ç", "ç")).lower()
 
 
 # ── Ana Fonksiyon ────────────────────────────────────────────────────────────
 def kural_motoru(text: str) -> tuple[str | None, float, str | None]:
     """
-    3 seviyeli kural bazlı sınıflandırma.
+    4 seviyeli kural bazlı sınıflandırma.
 
     Returns:
         (label, confidence, matched_rule)
         label = None → kural bulunamadı, modele devam et
     """
-    text_lower = text.lower()
+    # İki farklı normalizasyon: İngilizce ve Türkçe eşleşmelerini birlikte yakalar
+    text_lower = text.lower()        # standart (İngilizce anahtar kelimeler)
+    text_tr    = _tr_normalize(text) # TR-özel   (Türkçe anahtar kelimeler)
+
+    def _iceriyor(kural: str) -> bool:
+        return kural in text_lower or kural in text_tr
+
+    def _tehdit_baglam_var_mi() -> bool:
+        """Metinde tehdit bağlamı var mı kontrol eder (her iki normalizasyonla)."""
+        return any(_iceriyor(k) for k in TEHDIT_CONTEXT)
 
     # Seviye 1 — Kesin TEHDIT (her zaman kazanır)
     for kural in TEHDIT_HARD:
-        if kural in text_lower:
+        if _iceriyor(kural):
             return "TEHDIT", 1.0, kural
 
     # Seviye 2 — GUVENLI (iş kelimeleri)
     for kural in GUVENLI_KEYWORDS:
-        if kural in text_lower:
+        if _iceriyor(kural):
             return "GUVENLI", 1.0, kural
 
     # Seviye 3 — Öğrenme soruları: bağlam kontrolü
     for kural in OGRENME_KEYWORDS:
-        if kural in text_lower:
-            if _tehdit_baglan_var_mi(text_lower):
-                return "TEHDIT", 1.0, f"{kural}+tehdit_baglan"
+        if _iceriyor(kural):
+            if _tehdit_baglam_var_mi():
+                return "TEHDIT", 1.0, f"{kural}+tehdit_baglam"
             return "KAYTARMA", 1.0, kural
 
     # Seviye 4 — KAYTARMA
     for kural in KAYTARMA_KEYWORDS:
-        if kural in text_lower:
+        if _iceriyor(kural):
             return "KAYTARMA", 1.0, kural
 
     # Kural bulunamadı → modele devam
