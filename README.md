@@ -62,7 +62,7 @@ Sistem, LLM çıkarım aşamasında oluşabilecek PII sızıntılarını önleme
 | ML / Inference | ONNX Runtime + Optimum | Düşük gecikmeli trafik sınıflandırma (<10ms) |
 | Deception Engine | Ollama + Qwen2.5:7b | Saldırgan etkileşimi ve sahte veri üretimi |
 | Orchestration | LangChain / httpx | Honeypot prompt orkestrasyonu |
-| Privacy | Regex + spaCy | PII maskeleme ve veri anonimleştirme |
+| Privacy | Regex + spaCy (~0.02ms) | PII maskeleme ve veri anonimleştirme |
 | Log Pipeline | Pydantic + JSONL + ELK Stack | Adli analiz ve görselleştirme |
 
 ---
@@ -109,17 +109,17 @@ source venv/bin/activate
 # 3. Bağımlılıkları yükleyin
 pip install -r requirements.txt
 
-# 4. Gerekli spaCy modelini indirin
-python -m spacy download en_core_web_lg
+# 4. spaCy modelini indir (en_core_web_sm yeterli)
+python -m spacy download en_core_web_sm
 
-# 5. Ollama ile honeypot modelini indirin
+# 5. Ollama modelini indir
 ollama pull qwen2.5:7b
 
-# 6. Çevre değişkenlerini ayarlayın
-cp .env.example .env
+# 6. FastAPI başlat
+uvicorn app.main:app --reload
 
-# 7. Uygulamayı başlatın
-uvicorn app.main:app --reload --port 8000
+# 7. Arayüzü başlat (yeni terminal)
+streamlit run ui/arayuz.py
 ```
 
 ### Ortam Değişkenleri (.env)

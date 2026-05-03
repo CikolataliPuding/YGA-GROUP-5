@@ -1,0 +1,19 @@
+{
+  "seed": 42,
+  "sample_size": 200,
+  "warmup": 50,
+  "fast_masker": {
+    "avg_ms": 0.0078,
+    "p50_ms": 0.0069,
+    "p95_ms": 0.0143,
+    "max_ms": 0.0209,
+    "min_ms": 0.0031
+  },
+  "presidio": {
+    "avg_ms": 4.9062,
+    "p50_ms": 4.9834,
+    "p95_ms": 7.1595,
+    "max_ms": 8.6524,
+    "min_ms": 2.2549
+  }
+}
