@@ -39,6 +39,8 @@ class ErlikClassifier:
             padding="max_length",
             return_token_type_ids=True,
         )
+        # Sadece modelin beklediği girdileri geçir; fazladan anahtarlar runtime hatası verebilir
+        inp = {k: v for k, v in inp.items() if k in self.input_names}
 
         t0  = time.perf_counter()
         out = self.model(**inp)
