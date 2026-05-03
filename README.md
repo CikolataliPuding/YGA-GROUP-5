@@ -116,20 +116,19 @@ Arayüzü ve animasyonları sorunsuz görüntülemek için:
 1. **Bağımlılıkları Yükle:**
    ```bash
    pip install -r requirements.txt
+   ```
 
-   NLP Modelini İndir:
+2. **NLP Modelini İndir:**
+   ```bash
+   python -m spacy download en_core_web_sm
+   ```
 
-Bash
-python -m spacy download en_core_web_sm
+3. **Sistemi Başlat:**
+   ```bash
+   python -m streamlit run ui/arayuz.py
+   ```
 
-Sistemi Başlat:
-
-Bash
-python -m streamlit run ui/arayuz.py
-
-Modül Yapısı
-ui/: Kullanıcı arayüzü katmanı (arayuz.py).
-
-masking/: Veri analiz motoru ve kural tanımlayıcıları (presidio_engine.py, tr_recognizers.py).
-
-requirements.txt: Sistem için gerekli tüm kütüphane listesi.
+**Modül Yapısı**
+- `ui/`: Kullanıcı arayüzü katmanı (`arayuz.py`).
+- `masking/`: Veri analiz motoru ve kural tanımlayıcıları (`presidio_engine.py`, `tr_recognizers.py`).
+- `requirements.txt`: Sistem için gerekli tüm kütüphane listesi.
