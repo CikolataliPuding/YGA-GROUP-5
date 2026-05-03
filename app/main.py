@@ -1,4 +1,5 @@
 # app/main.py
+import time
 from fastapi import FastAPI, BackgroundTasks
 from pydantic import BaseModel
 from app.classifier import ErlikClassifier
@@ -18,19 +19,20 @@ class ClassifyResponse(BaseModel):
     source:           str
     rule_match:       str | None
     honeypot_session: str | None = None
+    e2e_ms:           float = 0.0
 
 @app.post("/classify", response_model=ClassifyResponse)
 def classify(req: PromptRequest, background_tasks: BackgroundTasks):
+    t0 = time.perf_counter()
     result = classifier.classify(req.text)
-    
+
     honeypot_session = None
-    print(f"DEBUG decision: {result['decision']}")  # ← ekle
     if result["decision"] == "TEHDIT":
-        print("DEBUG honeypot tetikleniyor")  # ← ekle
         honeypot_session = route_to_honeypot(req.text, background_tasks)
-        print(f"DEBUG session_id: {honeypot_session}")  # ← ekle
-    
-    return ClassifyResponse(**result, honeypot_session=honeypot_session)
+
+    e2e_ms = round((time.perf_counter() - t0) * 1000, 2)
+
+    return ClassifyResponse(**result, honeypot_session=honeypot_session, e2e_ms=e2e_ms)
 
 @app.get("/health")
 def health():
