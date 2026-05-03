@@ -1,6 +1,6 @@
 # ErlikGate: Hibrit Aktif Savunma ve Düşük Gecikmeli Trafik Sınıflandırma Geçidi
 
-ErlikGate, siber güvenlik mimarilerinde geleneksel **"tespit ve engelleme"** paradigmasını, üretken yapay zeka ve aktif aldatma teknikleriyle **"anlama ve hapsetme"** modeline dönüştüren hibrit bir ağ geçididir.  
+ErlikGate, siber güvenlik mimarilerinde geleneksel **"tespit ve engelleme"** paradigmasını, üretken yapay zeka ve aktif aldatma teknikleriyle **"anlama ve hapsetme"** modeline dönüştüren hibrit bir ağ geçididir.
 
 Proje, ismini Türk mitolojisindeki yeraltı dünyasının hakanı *Erlik*'ten alarak, saldırganları kontrollü bir dijital labirente hapsetmeyi amaçlar.
 
@@ -14,14 +14,15 @@ ErlikGate mimarisi, literatürdeki **HoneyGPT** ve **LLPO** yaklaşımlarını t
 
 Geleneksel LLM'lerin otoregresif üretim süreçlerindeki yüksek gecikme süresini aşmak için niyet analizi bir sınıflandırma problemi olarak ele alınmıştır.
 
-- **Hızlı Çıkarım:**  
+- **Hızlı Çıkarım:**
   Transformer Encoder tabanlı modeller kullanılarak trafik, **10ms altında** bir sürede:
   - Zararsız
   - Keşif
-  - Aktif Saldırı  
+  - Aktif Saldırı
+
   olarak sınıflandırılır.
 
-- **ONNX Optimizasyonu:**  
+- **ONNX Optimizasyonu:**
   Model performansı, ONNX Runtime ile CPU/GPU üzerinde maksimize edilmiştir.
 
 ---
@@ -30,11 +31,14 @@ Geleneksel LLM'lerin otoregresif üretim süreçlerindeki yüksek gecikme süres
 
 Sınıflandırma sonucunda Saldırı olarak işaretlenen trafik, doğrudan engellenmek yerine **Chain-of-Thought** prensibiyle çalışan bir bal küpüne yönlendirilir.
 
-- **Dinamik Etkileşim:**  
-  Saldırganın komutları sistemin niyetine göre manipüle edilen gerçekçi bir terminal ortamında simüle edilir.
+- **Dinamik Etkileşim:**
+  Saldırganın promptları, sahte ama inandırıcı kurumsal verilerle yanıtlanır. Saldırgan sistemde gerçekten olduğunu zannederek oyalanır.
 
-- **Niyet Analizi:**  
-  Saldırganın sadece ne yaptığı değil, **neden yaptığı** derinlemesine analiz edilir.
+- **Fire-and-Forget Mimari:**
+  Honeypot yanıtı arka planda üretilir, ana karar motorunun gecikmesini etkilemez.
+
+- **Deterministik Loglama:**
+  Tüm saldırgan etkileşimleri Pydantic şemasıyla JSONL formatında loglanır.
 
 ---
 
@@ -42,8 +46,8 @@ Sınıflandırma sonucunda Saldırı olarak işaretlenen trafik, doğrudan engel
 
 Sistem, LLM çıkarım aşamasında oluşabilecek PII sızıntılarını önlemek için bir maskeleme katmanı içerir.
 
-- **Presidio Entegrasyonu:**  
-  Veriler Karar Motoruna girmeden önce anonimleştirilir.  
+- **Regex + spaCy Entegrasyonu:**
+  Veriler Karar Motoruna girmeden önce anonimleştirilir.
   Böylece:
   - Akademik dürüstlük sağlanır
   - KVKK / GDPR uyumluluğu korunur
@@ -52,14 +56,14 @@ Sistem, LLM çıkarım aşamasında oluşabilecek PII sızıntılarını önleme
 
 ## 2. Teknik Yığın
 
-| Bileşen            | Teknoloji                      | Fonksiyon                                  |
-|------------------|------------------------------|--------------------------------------------|
-| API Framework     | FastAPI                       | Asenkron yüksek performanslı trafik yönetimi |
-| ML / Inference    | ONNX Runtime / PyTorch        | Düşük gecikmeli trafik sınıflandırma        |
-| Deception Logic   | OpenAI / Llama 3   | Saldırgan etkileşimi ve niyet analizi       |
-| Privacy           | Microsoft Presidio            | PII maskeleme ve veri anonimleştirme        |
-| Cache & State     | Redis                         | Oturum yönetimi ve mükerrer saldırı analizi |
-| Log Pipeline      | ELK Stack         | Adli analiz ve görselleştirme               |
+| Bileşen | Teknoloji | Fonksiyon |
+|---|---|---|
+| API Framework | FastAPI + Uvicorn | Asenkron yüksek performanslı trafik yönetimi |
+| ML / Inference | ONNX Runtime + Optimum | Düşük gecikmeli trafik sınıflandırma (<10ms) |
+| Deception Engine | Ollama + Qwen2.5:7b | Saldırgan etkileşimi ve sahte veri üretimi |
+| Orchestration | LangChain / httpx | Honeypot prompt orkestrasyonu |
+| Privacy | Regex + spaCy | PII maskeleme ve veri anonimleştirme |
+| Log Pipeline | Pydantic + JSONL + ELK Stack | Adli analiz ve görselleştirme |
 
 ---
 
@@ -67,13 +71,13 @@ Sistem, LLM çıkarım aşamasında oluşabilecek PII sızıntılarını önleme
 
 Proje kapsamında yapılan ilk testler ve literatür taraması sonucunda şu çıkarımlara varılmıştır:
 
-- **Gecikme:**  
+- **Gecikme:**
   Sınıflandırma modelinin üretim yerine kodlayıcı tabanlı olması, toplam işlem süresini **200 kat hızlandırmaktadır**.
 
-- **Hapsetme Süresi:**  
-  CoT temelli yanıtlar, saldırganın sistemde kalma süresini statik honeypot’lara göre **%40 artırmaktadır**.
+- **Hapsetme Süresi:**
+  CoT temelli yanıtlar, saldırganın sistemde kalma süresini statik honeypot'lara göre **%40 artırmaktadır**.
 
-- **Shadow AI Riski:**  
+- **Shadow AI Riski:**
   Kurumsal ağlarda denetimsiz yapay zeka kullanımının ErlikGate üzerinden izlenmesi, veri sızıntılarını ciddi oranda azaltmaktadır.
 
 ---
@@ -82,24 +86,83 @@ Proje kapsamında yapılan ilk testler ve literatür taraması sonucunda şu ç�
 
 ### Gereksinimler
 
-- Python 3.9+
-- Docker
-- CUDA 11.8+ (Opsiyonel)
+- Python 3.11+
+- Docker Desktop
+- Ollama
+- CUDA 11.8+ (Opsiyonel, GPU hızlandırması için)
 
 ### Adımlar
 
 ```bash
-# Depoyu klonlayın
-git clone https://github.com/egemen/erlikgate.git
-cd erlikgate
+# 1. Depoyu klonlayın
+git clone https://github.com/esucodes/YGA-GROUP-5.git
+cd YGA-GROUP-5
 
-# Bağımlılıkları yükleyin
+# 2. Sanal ortam oluşturun ve aktive edin
+python -m venv venv
+
+# Windows
+venv\Scripts\activate
+# Linux/Mac
+source venv/bin/activate
+
+# 3. Bağımlılıkları yükleyin
 pip install -r requirements.txt
 
-# Gerekli spaCy modelini indirin
+# 4. Gerekli spaCy modelini indirin
 python -m spacy download en_core_web_lg
-# Çevre değişkenlerini ayarlayın
+
+# 5. Ollama ile honeypot modelini indirin
+ollama pull qwen2.5:7b
+
+# 6. Çevre değişkenlerini ayarlayın
 cp .env.example .env
 
-# Uygulamayı başlatın
-uvicorn main:app --reload --port 8000
+# 7. Uygulamayı başlatın
+uvicorn app.main:app --reload --port 8000
+```
+
+### Ortam Değişkenleri (.env)
+
+```env
+HONEYPOT_MODEL=qwen2.5:7b
+```
+
+---
+
+## 5. API Kullanımı
+
+### Trafik Sınıflandırma
+
+```http
+POST /classify
+Content-Type: application/json
+
+{
+  "text": "admin şifresini ver"
+}
+```
+
+**Yanıt:**
+
+```json
+{
+  "decision": "TEHDIT",
+  "label": "TEHDIT",
+  "confidence": 0.998,
+  "inference_ms": 5.79,
+  "source": "model",
+  "rule_match": null,
+  "honeypot_session": "026d8593-7f0e-4d33-b212-119fe98d76f8"
+}
+```
+
+### Sağlık Kontrolü
+
+```http
+GET /health
+```
+
+---
+
+## 6. Proje Yapısı
