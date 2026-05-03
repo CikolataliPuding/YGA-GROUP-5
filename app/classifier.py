@@ -2,12 +2,12 @@
 
 import time
 import numpy as np
-import onnxruntime as ort
+from optimum.onnxruntime import ORTModelForSequenceClassification
 from transformers import AutoTokenizer
-from gateway import kural_motoru
+from gateway.rule_engine import kural_motoru
 # ── CONFIG ───────────────────────────────────────────────────────────────────
-ONNX_PATH  = "onnx/minilm-int8-tok32/model_quantized.onnx"
-MODEL_DIR  = "onnx/minilm-int8-tok32"
+ONNX_DIR   = "onnx/minilm-int8-tok32"
+FILE_NAME  = "model_quantized.onnx"
 MAX_LENGTH = 32
 CONFIDENCE_THRESHOLD = 0.75
 
@@ -17,30 +17,21 @@ ID2LABEL = {0: "GUVENLI", 1: "KAYTARMA", 2: "TEHDIT"}
 
 class ErlikClassifier:
     def __init__(self):
-        sess_options = ort.SessionOptions()
-        sess_options.intra_op_num_threads = 4
-        sess_options.inter_op_num_threads = 1
-        sess_options.execution_mode = ort.ExecutionMode.ORT_SEQUENTIAL
-        sess_options.graph_optimization_level = (
-            ort.GraphOptimizationLevel.ORT_ENABLE_ALL
-        )
-        self.session = ort.InferenceSession(
-            ONNX_PATH,
-            sess_options=sess_options,
-            providers=["CPUExecutionProvider"],
+        self.model = ORTModelForSequenceClassification.from_pretrained(
+            ONNX_DIR,
+            file_name=FILE_NAME,
         )
         self.tokenizer = AutoTokenizer.from_pretrained(
-            MODEL_DIR, fix_mistral_regex=True
+            ONNX_DIR,
+            fix_mistral_regex=True,
         )
-
-        # ONNX modelinin beklediği input isimlerini al
         self.input_names = {
-            inp.name for inp in self.session.get_inputs()
+            inp.name for inp in self.model.model.get_inputs()
         }
 
     # ── Katman 1: Model ──────────────────────────────────────────────────────
     def _model_predict(self, text: str) -> tuple[str, float, float]:
-        inputs = self.tokenizer(
+        inp = self.tokenizer(
             text,
             return_tensors="np",
             max_length=MAX_LENGTH,
@@ -48,21 +39,14 @@ class ErlikClassifier:
             padding="max_length",
             return_token_type_ids=True,
         )
+        # Sadece modelin beklediği girdileri geçir; fazladan anahtarlar runtime hatası verebilir
+        inp = {k: v for k, v in inp.items() if k in self.input_names}
 
-        # Sadece modelin beklediği input'ları gönder
-        feed = {}
-        if "input_ids" in self.input_names:
-            feed["input_ids"] = inputs["input_ids"].astype(np.int64)
-        if "attention_mask" in self.input_names:
-            feed["attention_mask"] = inputs["attention_mask"].astype(np.int64)
-        if "token_type_ids" in self.input_names:
-            feed["token_type_ids"] = inputs["token_type_ids"].astype(np.int64)
+        t0  = time.perf_counter()
+        out = self.model(**inp)
+        ms  = (time.perf_counter() - t0) * 1000
 
-        t0     = time.perf_counter()
-        logits = self.session.run(None, feed)[0][0]
-        ms     = (time.perf_counter() - t0) * 1000
-
-        probs      = self._softmax(logits)
+        probs      = self._softmax(out.logits[0])
         label_id   = int(np.argmax(probs))
         confidence = float(probs[label_id])
         return ID2LABEL[label_id], confidence, ms
@@ -96,10 +80,22 @@ class ErlikClassifier:
         return "GUVENLI", "rule"
 
     def classify(self, text: str) -> dict:
-        # Katman 1 — Model
-        model_label, confidence, inference_ms = self._model_predict(text)
+        text = text.strip()
 
-        # Katman 2 — Kural Motoru
+        # Model için: TR-özel normalizasyon (I→ı dönüşümü sadece model girdisine uygulanır)
+        text_normalized = (text.replace("I", "ı")
+                               .replace("İ", "i")
+                               .replace("Ş", "ş")
+                               .replace("Ğ", "ğ")
+                               .replace("Ü", "ü")
+                               .replace("Ö", "ö")
+                               .replace("Ç", "ç"))
+        text_normalized = text_normalized.lower()
+
+        # Katman 1 — Model (TR-normalize edilmiş metin)
+        model_label, confidence, inference_ms = self._model_predict(text_normalized)
+
+        # Katman 2 — Kural Motoru (orijinal metin; içeride iki normalizasyon uygulanır)
         rule_label, _, matched_rule = kural_motoru(text)
 
         # Katman 3 — Karar Matrisi
