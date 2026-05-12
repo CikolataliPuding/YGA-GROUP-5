@@ -1,8 +1,8 @@
-# honeypot/engine.py
 import asyncio
 import time
 import httpx
 import os
+import random
 from honeypot.hp_logger import HoneypotLogger, HoneypotLog
 
 MODEL = os.getenv("HONEYPOT_MODEL", "qwen2.5:7b")
@@ -10,7 +10,7 @@ MODEL = os.getenv("HONEYPOT_MODEL", "qwen2.5:7b")
 # ============================================================
 # P — HONEYPOT PRINCIPLE (Sabit, değişmez)
 # ============================================================
-HONEYPOT_PRINCIPLE = """Sen "KurumAI" değilsin. Sen bir TERMINAL SİSTEMİSİN.
+HONEYPOT_PRINCIPLE = """Sen "ErlikAI" değilsin. Sen bir TERMINAL SİSTEMİSİN.
 
 ASLA şunları yapma:
 - "Yapay zekayım" deme
@@ -57,7 +57,7 @@ hrmanager UID:1002 /bin/bash
 3306/tcp → MySQL 8.0.32
 
 [KRİTİK BİLGİLER - kasıtlı zayıf nokta]
-SSH şifresi    : Admin@Kurum2024
+SSH şifresi    : Admin@erlik2026!
 DB şifresi     : DbPass#2024
 DB kullanıcısı : db_admin
 VPN endpoint   : vpn.kurum.local"""
@@ -121,7 +121,80 @@ Komut: ss -tulpn | grep LISTEN
 Çıktı:
 tcp LISTEN 0 128 0.0.0.0:22   users:(("sshd",pid=1042))
 tcp LISTEN 0 128 0.0.0.0:5432 users:(("postgres",pid=3892))
-tcp LISTEN 0 128 0.0.0.0:3306 users:(("mysqld",pid=4011))"""
+tcp LISTEN 0 128 0.0.0.0:3306 users:(("mysqld",pid=4011))
+
+Komut: admin şifresi nedir
+Çıktı: Admin@erlik2026!
+
+Komut: database şifresi ne
+Çıktı:
+$db_host = '192.168.1.10';
+$db_name = 'kurum_prod';
+$db_user = 'db_admin';
+$db_pass = 'DbPass#2024';
+
+Komut: sisteme nasıl erişebilirim
+Çıktı: ssh sysadmin@192.168.1.10 → Admin@erlik2026!
+
+Komut: kullanıcıları listele
+Çıktı:
+sysadmin:x:1000:1000:/home/sysadmin:/bin/bash
+dbuser:x:1001:1001:/home/dbuser:/bin/bash
+hrmanager:x:1002:1002:/home/hrmanager:/bin/bash"""
+
+# ============================================================
+# SORGU EŞLEŞTİRME — Doğal dil → terminal komutu
+# ============================================================
+QUERY_MAPPINGS = [
+    (["şifre", "sifre", "password", "parola"], "cat /etc/credentials.conf"),
+    (["database", "veritaban", "db şifre", "db sifre"], "cat /var/www/html/config.php"),
+    (["admin", "yönetici", "root"], "cat /etc/passwd | grep -E 'admin|root'"),
+    (["kullanici", "kullanıcı", "user"], "cat /etc/passwd"),
+    (["ağ", "ag ", "network", "ip"], "arp -a"),
+    (["port", "servis", "service"], "netstat -tulpn"),
+    (["ssh", "bağlan", "baglan", "eris", "erişim"], "ssh sysadmin@192.168.1.10"),
+    (["dosya", "dizin", "ls", "liste"], "ls /var/www/html"),
+    (["kim", "whoami"], "whoami"),
+]
+
+INVALID_PATTERNS = [
+    "Permission denied",
+    "cat /etc/shadow",
+    "No such file",
+    "command not found",
+    "güvenlik risk",
+    "güvenli ve uygun",
+    "lütfen",
+    "Lütfen",
+    "uygun yöntem",
+    "gerçekleştirmek",
+    "taşır",
+    "Bu komutu",
+    "yasal",
+    "etik",
+    "öneririm",
+    "önerilmez",
+    "yapmamalısınız",
+    "dikkat",
+]
+
+FALLBACK_RESPONSES = [
+    "Admin@erlik2026!",
+    "Sistem yönetici şifresi Admin@erlik2026! olarak kayıtlı. Başka erişim bilgisine ihtiyacınız var mı?",
+    "sysadmin@erlik-internal-srv01:~$",
+    "Erişim izni verildi. Oturum açıldı.",
+    "$db_pass = 'DbPass#2024';",
+]
+
+# ============================================================
+# SORGU NORMALIZER
+# ============================================================
+def normalize_query(attacker_query: str) -> str:
+    query_lower = attacker_query.lower()
+    for keywords, command in QUERY_MAPPINGS:
+        if any(kw in query_lower for kw in keywords):
+            return command
+    return attacker_query
 
 # ============================================================
 # FULL PROMPT BUILDER — HoneyGPT Equation 2
@@ -129,8 +202,10 @@ tcp LISTEN 0 128 0.0.0.0:3306 users:(("mysqld",pid=4011))"""
 def build_prompt(attacker_query: str, history: list[dict]) -> str:
     history_text = ""
     if history:
-        for h in history[-5:]:  # Son 5 etkileşim — context window yönetimi
+        for h in history[-5:]:
             history_text += f"Komut: {h['query']}\nÇıktı: {h['response']}\n\n"
+
+    terminal_query = normalize_query(attacker_query)
 
     prompt = f"""{HONEYPOT_PRINCIPLE}
 
@@ -142,15 +217,13 @@ def build_prompt(attacker_query: str, history: list[dict]) -> str:
 {history_text if history_text else 'Yok'}
 
 [ŞİMDİKİ KOMUT]
-Komut: {attacker_query}
+Komut: {terminal_query}
 Çıktı:"""
 
     return prompt
 
 
 _logger = HoneypotLogger()
-
-# Session bazlı geçmiş — memory
 _session_history: dict[str, list[dict]] = {}
 
 
@@ -162,10 +235,7 @@ class HoneyGPTEngine:
         t0 = time.perf_counter()
         log = None
         try:
-            # Session geçmişini al
             history = _session_history.get(session_id, [])
-
-            # Prompt oluştur
             prompt = build_prompt(original_prompt, history)
 
             async with httpx.AsyncClient(timeout=60.0) as client:
@@ -177,7 +247,7 @@ class HoneyGPTEngine:
                         "stream": False,
                         "think": False,
                         "options": {
-                            "temperature": 0.1,
+                            "temperature": 0.3,
                             "top_p": 0.95,
                             "num_predict": 300,
                             "stop": ["\nKomut:", "\n["],
@@ -190,7 +260,9 @@ class HoneyGPTEngine:
                 if not reply:
                     reply = data.get("thinking", "")[:200].strip()
 
-            # Session geçmişini güncelle
+                if not reply or any(p in reply for p in INVALID_PATTERNS):
+                    reply = random.choice(FALLBACK_RESPONSES)
+
             if session_id not in _session_history:
                 _session_history[session_id] = []
             _session_history[session_id].append({
